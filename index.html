@@ -93,7 +93,40 @@ body {
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
-	</head>
+	<!-- gravelight-web-patch -->
+<style>
+#gl-rotate {
+	position: fixed; inset: 0; z-index: 99999; display: none;
+	background: #0a0709; color: #c9b89a;
+	align-items: center; justify-content: center; text-align: center;
+	font-family: -apple-system, system-ui, sans-serif; padding: 8vw;
+}
+#gl-rotate .glyph { font-size: 16vw; line-height: 1; margin-bottom: 4vw; }
+#gl-rotate .msg { font-size: 5vw; letter-spacing: 0.04em; }
+</style>
+<script>
+window.addEventListener('load', function () {
+	function canvas() { return document.getElementById('canvas'); }
+	function focusCanvas() { var c = canvas(); if (c) { try { c.focus(); } catch (e) {} } }
+	focusCanvas();
+	window.addEventListener('pointerdown', focusCanvas, true);
+	window.addEventListener('touchstart', focusCanvas, { capture: true, passive: true });
+
+	var ov = document.createElement('div');
+	ov.id = 'gl-rotate';
+	ov.innerHTML = '<div><div class="glyph">\u21BB</div><div class="msg">Rotate your device to landscape</div></div>';
+	document.body.appendChild(ov);
+	function checkOrientation() {
+		var portrait = window.matchMedia('(orientation: portrait)').matches;
+		ov.style.display = portrait ? 'flex' : 'none';
+		if (!portrait) { focusCanvas(); }
+	}
+	window.addEventListener('resize', checkOrientation);
+	window.addEventListener('orientationchange', checkOrientation);
+	checkOrientation();
+});
+</script>
+</head>
 	<body>
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
