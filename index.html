@@ -112,14 +112,16 @@ window.addEventListener('load', function () {
 	window.addEventListener('pointerdown', focusCanvas, true);
 	window.addEventListener('touchstart', focusCanvas, { capture: true, passive: true });
 
+	var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
 	var ov = document.createElement('div');
 	ov.id = 'gl-rotate';
 	ov.innerHTML = '<div><div class="glyph">\u21BB</div><div class="msg">Rotate your device to landscape</div></div>';
 	document.body.appendChild(ov);
 	function checkOrientation() {
 		var portrait = window.matchMedia('(orientation: portrait)').matches;
-		ov.style.display = portrait ? 'flex' : 'none';
-		if (!portrait) { focusCanvas(); }
+		// Only nag on real touch devices — never cover a desktop window.
+		ov.style.display = (isTouch && portrait) ? 'flex' : 'none';
+		if (ov.style.display === 'none') { focusCanvas(); }
 	}
 	window.addEventListener('resize', checkOrientation);
 	window.addEventListener('orientationchange', checkOrientation);
@@ -128,7 +130,7 @@ window.addEventListener('load', function () {
 </script>
 </head>
 	<body>
-		<canvas id="canvas">
+		<canvas id="canvas" tabindex="0">
 			Your browser does not support the canvas tag.
 		</canvas>
 
